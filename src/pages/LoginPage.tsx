@@ -1,5 +1,6 @@
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import type { LoginFormValues } from '../types/types';
+import { useAuth } from '../api/hooks/useAuth';
 
 export const LoginPage = () => {
   const {
@@ -7,9 +8,10 @@ export const LoginPage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormValues>();
+  const { login, isLoading, error } = useAuth();
 
   const onSubmit: SubmitHandler<LoginFormValues> = (data) => {
-    console.log({ data });
+    login(data);
   };
 
   return (
@@ -35,9 +37,9 @@ export const LoginPage = () => {
               id="email"
               placeholder="Ingresar correo"
               className="mb-1 w-full py-2.5 px-3 rounded-sm border border-gray-500"
-              {...register('email', { required: 'Email is required' })}
+              {...register('username', { required: 'Email is required' })}
             />
-            {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+            {errors.username && <p className="text-red-500 text-sm">{errors.username.message}</p>}
           </div>
 
           <div className="mb-6">
@@ -50,6 +52,7 @@ export const LoginPage = () => {
               {...register('password', { required: 'Password is required' })}
             />
             {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+            {error && <p className="text-red-500 text-sm">{error}</p>}
           </div>
 
           <a
@@ -59,7 +62,11 @@ export const LoginPage = () => {
             Recuperar contraseña
           </a>
 
-          <button className="bg-indigo-950 rounded-sm text-white py-2.5 px-24 cursor-pointer hover:bg-blue-900 font-medium self-center">
+          <button
+            className={`rounded-sm py-2.5 px-24 cursor-pointer font-medium self-center ${
+              isLoading ? 'bg-gray-200 text-gray-500' : 'bg-indigo-950 text-white hover:bg-blue-900'
+            }`}
+          >
             Ingresar
           </button>
         </form>
