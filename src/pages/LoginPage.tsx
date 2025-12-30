@@ -1,4 +1,17 @@
+import { useForm, type SubmitHandler } from 'react-hook-form';
+import type { LoginFormValues } from '../types/types';
+
 export const LoginPage = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormValues>();
+
+  const onSubmit: SubmitHandler<LoginFormValues> = (data) => {
+    console.log({ data });
+  };
+
   return (
     <section
       className="min-h-screen bg-cover flex items-center justify-center"
@@ -13,24 +26,31 @@ export const LoginPage = () => {
           ¡Empieza a conectar tu comunidad ante buenas acciones!
         </p>
 
-        <form action="" className="flex flex-col px-1.5">
-          <label className="block text-sm mb-1">Correo Electrónico*</label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            placeholder="Ingresar correo"
-            className="mb-2.5 w-full py-2.5 px-3 rounded-sm border border-gray-500"
-          />
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col px-1.5">
+          <div className="mb-2.5">
+            {' '}
+            <label className="block text-sm mb-1">Correo Electrónico*</label>
+            <input
+              type="email"
+              id="email"
+              placeholder="Ingresar correo"
+              className="mb-1 w-full py-2.5 px-3 rounded-sm border border-gray-500"
+              {...register('email', { required: 'Email is required' })}
+            />
+            {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+          </div>
 
-          <label className="block text-sm mb-1">Contraseña*</label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            placeholder="Ingresa tu contraseña"
-            className="mb-6 w-full py-2.5 px-3 rounded-sm border border-gray-500"
-          />
+          <div className="mb-6">
+            <label className="block text-sm mb-1">Contraseña*</label>
+            <input
+              type="password"
+              id="password"
+              placeholder="Ingresa tu contraseña"
+              className="mb-1 w-full py-2.5 px-3 rounded-sm border border-gray-500"
+              {...register('password', { required: 'Password is required' })}
+            />
+            {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+          </div>
 
           <a
             href="#"
