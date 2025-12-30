@@ -11,7 +11,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     <div className="grid h-screen grid-cols-[240px_1fr] grid-rows-[66px_1fr] ">
       <Header />
       <Aside />
-      <main className="overflow-y-auto bg-gray-100 p-6">{children}</main>
+      <main className="overflow-y-auto bg-gray-100 p-8">{children}</main>
     </div>
   );
 };

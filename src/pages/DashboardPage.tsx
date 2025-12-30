@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { DashboardLayout } from '../layouts/DashboardLayout';
+import { DashboardTable } from '../components/DashboardTable';
+import { mockData } from '../data/data';
 
 export const DashboardPage = () => {
   const [tab, setTab] = useState(0);
@@ -24,6 +26,8 @@ export const DashboardPage = () => {
           Evidencias
         </button>
       </nav>
+
+      <DashboardTable data={mockData} />
     </DashboardLayout>
   );
 };
