@@ -1,6 +1,10 @@
+import { useAuth } from '../api/hooks/useAuth';
+
 export const Aside = () => {
   const styles =
     'cursor-pointer border-l-4 border-transparent p-4 text-gray-900 transition-colors hover:border-cyan-500 hover:bg-cyan-50';
+
+  const { logout } = useAuth();
 
   return (
     <aside className="flex flex-col">
@@ -15,7 +19,10 @@ export const Aside = () => {
         <li className={styles}>Contenidos</li>
         <li className={styles}>Categorías de acciones</li>
       </ul>
-      <button className="text-indigo-950 font-medium text-center cursor-pointer mt-3">
+      <button
+        className="text-indigo-950 font-medium text-center cursor-pointer mt-3"
+        onClick={logout}
+      >
         Cerrar sesión
       </button>
     </aside>

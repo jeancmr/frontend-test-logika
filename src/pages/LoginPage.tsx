@@ -1,6 +1,7 @@
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import type { LoginFormValues } from '../types/types';
 import { useAuth } from '../api/hooks/useAuth';
+import { Navigate } from 'react-router';
 
 export const LoginPage = () => {
   const {
@@ -8,7 +9,11 @@ export const LoginPage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormValues>();
-  const { login, isLoading, error } = useAuth();
+  const { login, isLoading, error, isAuthenticated } = useAuth();
+
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   const onSubmit: SubmitHandler<LoginFormValues> = (data) => {
     login(data);
@@ -37,7 +42,7 @@ export const LoginPage = () => {
               id="email"
               placeholder="Ingresar correo"
               className="mb-1 w-full py-2.5 px-3 rounded-sm border border-gray-500"
-              {...register('username', { required: 'Email is required' })}
+              {...register('username', { required: 'Correo electrónico es requerido' })}
             />
             {errors.username && <p className="text-red-500 text-sm">{errors.username.message}</p>}
           </div>
@@ -49,7 +54,7 @@ export const LoginPage = () => {
               id="password"
               placeholder="Ingresa tu contraseña"
               className="mb-1 w-full py-2.5 px-3 rounded-sm border border-gray-500"
-              {...register('password', { required: 'Password is required' })}
+              {...register('password', { required: 'Contraseña es requerida' })}
             />
             {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
             {error && <p className="text-red-500 text-sm">{error}</p>}

@@ -4,23 +4,26 @@ import { authLogin } from '../utils/auth.api';
 
 interface AuthContextType {
   error: string;
+  isAuthenticated: boolean;
   isLoading: boolean;
   login: (formData: LoginFormValues) => Promise<void>;
+  logout: () => void;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [error, setError] = useState<string>('');
-
   const [isLoading, setIsLoading] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
 
   const login = async (formData: LoginFormValues) => {
     setIsLoading(true);
 
     try {
       const res = await authLogin(formData);
-      console.log({ res });
+      localStorage.setItem('token', res);
+      setIsAuthenticated(true);
     } catch (errorReq) {
       if (errorReq instanceof Error) {
         setError(errorReq.message);
@@ -30,6 +33,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    setIsAuthenticated(false);
   };
 
   useEffect(() => {
@@ -45,8 +53,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     <AuthContext.Provider
       value={{
         error,
+        isAuthenticated,
         isLoading,
         login,
+        logout,
       }}
     >
       {children}
