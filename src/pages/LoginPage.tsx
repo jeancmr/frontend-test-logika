@@ -1,4 +1,5 @@
 import { useForm, type SubmitHandler } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
 import type { LoginFormValues } from '../types/types';
 import { useAuth } from '../api/hooks/useAuth';
 import { Navigate } from 'react-router';
@@ -15,8 +16,11 @@ export const LoginPage = () => {
     return <Navigate to="/dashboard" replace />;
   }
 
-  const onSubmit: SubmitHandler<LoginFormValues> = (data) => {
-    login(data);
+  const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
+    const res = await login(data);
+
+    if (res) toast.success('Inicio de sesión exitoso');
+    if (!res) toast.error('Inicio de sesión NO exitoso');
   };
 
   return (

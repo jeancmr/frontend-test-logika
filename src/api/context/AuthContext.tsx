@@ -6,7 +6,7 @@ interface AuthContextType {
   error: string;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (formData: LoginFormValues) => Promise<void>;
+  login: (formData: LoginFormValues) => Promise<boolean>;
   logout: () => void;
 }
 
@@ -24,12 +24,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const res = await authLogin(formData);
       localStorage.setItem('token', res);
       setIsAuthenticated(true);
+      return true;
     } catch (errorReq) {
       if (errorReq instanceof Error) {
         setError(errorReq.message);
       } else {
         setError('Un error desconocido ha ocurrido.');
       }
+      return false;
     } finally {
       setIsLoading(false);
     }

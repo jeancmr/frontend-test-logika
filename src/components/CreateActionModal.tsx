@@ -2,6 +2,7 @@ import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
 import type { CreateActionForm } from '../types/types';
 import { Switch } from './Switch';
 import { createAction } from '../api/utils/action.api';
+import toast from 'react-hot-toast';
 
 interface Props {
   handleModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -25,7 +26,9 @@ export const CreateActionModal = ({ handleModal, getActions }: Props) => {
     const token = localStorage.getItem('token');
 
     await createAction(dataForm, token);
+    toast.success('Acción creada con éxito');
     reset();
+
     getActions();
   };
 

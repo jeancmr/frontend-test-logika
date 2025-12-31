@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router';
 import { LoginPage } from '../pages/LoginPage';
 import { DashboardPage } from '../pages/DashboardPage';
 import { ProtectedRoutes } from './ProtectedRoutes';
+import { Toaster } from 'react-hot-toast';
 
 const AppRouter = () => {
   return (
@@ -14,6 +15,8 @@ const AppRouter = () => {
           <Route path="/dashboard" element={<DashboardPage />} />
         </Route>
       </Routes>
+
+      <Toaster position="bottom-right" reverseOrder={false} />
     </>
   );
 };
