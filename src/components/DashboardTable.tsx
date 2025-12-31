@@ -2,14 +2,13 @@ import {
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
-  getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Action } from '../types/types';
-import { useState } from 'react';
 import { DashboardPagination } from './DashboardPagination';
 import { DashboardFilters } from './DashboardFilters';
+import { useActions } from '../hooks/useActions';
 
 const columns: ColumnDef<Action>[] = [
   {
@@ -77,32 +76,33 @@ const columns: ColumnDef<Action>[] = [
   },
 ];
 
-interface Props {
-  data: Action[];
-}
+export const DashboardTable = () => {
+  const {
+    actions: data,
+    error,
+    isLoading,
+    pageCount,
+    totalItems,
+    pagination,
+    setPagination,
+  } = useActions();
 
-export const DashboardTable = ({ data }: Props) => {
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 10,
-  });
   const table = useReactTable({
     data,
     columns,
-    state: {
-      pagination,
-    },
+    state: { pagination },
     onPaginationChange: setPagination,
+    manualPagination: true,
+    pageCount,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
   });
 
   return (
     <>
       <DashboardFilters />
       <div className="rounded-lg border border-gray-300 bg-white">
-        <table className="w-full  text-sm">
+        <table className="w-full text-sm">
           <thead className="bg-gray-50">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
@@ -135,11 +135,44 @@ export const DashboardTable = ({ data }: Props) => {
                 ))}
               </tr>
             ))}
+
+            {isLoading && table.getRowModel().rows.length === 0 && (
+              <tr>
+                <td
+                  colSpan={table.getAllColumns().length}
+                  className="px-4 py-6 text-center text-gray-600"
+                >
+                  Cargando datos...
+                </td>
+              </tr>
+            )}
+
+            {error && (
+              <tr>
+                <td
+                  colSpan={table.getAllColumns().length}
+                  className="px-4 py-6 text-center text-gray-600"
+                >
+                  {error}
+                </td>
+              </tr>
+            )}
+
+            {!error && !isLoading && table.getRowModel().rows.length === 0 && (
+              <tr>
+                <td
+                  colSpan={table.getAllColumns().length}
+                  className="px-4 py-6 text-center text-gray-600"
+                >
+                  No hay datos disponibles
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
 
-      <DashboardPagination table={table} />
+      <DashboardPagination table={table} totalItems={totalItems} />
     </>
   );
 };

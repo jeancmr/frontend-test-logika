@@ -3,14 +3,20 @@ import type { Action } from '../types/types';
 
 interface DashboardPaginationProps {
   table: Table<Action>;
+  totalItems: number;
 }
-export const DashboardPagination = ({ table }: DashboardPaginationProps) => {
+export const DashboardPagination = ({ table, totalItems }: DashboardPaginationProps) => {
+  const { pageIndex, pageSize } = table.getState().pagination;
+
+  const start = pageIndex * pageSize + 1;
+  const end = Math.min((pageIndex + 1) * pageSize, totalItems);
+
   return (
     <div className="flex items-center gap-12 justify-center px-4 py-3 text-sm text-gray-900">
       <div className="flex items-center gap-2">
         <span>Resultados por página</span>
         <select
-          value={table.getState().pagination.pageSize}
+          value={pageSize}
           onChange={(e) => table.setPageSize(Number(e.target.value))}
           className="rounded border px-2 py-1"
         >
@@ -24,20 +30,18 @@ export const DashboardPagination = ({ table }: DashboardPaginationProps) => {
 
       <div className="flex items-center gap-4">
         <span>
-          {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}
+          {start}
           {' - '}
-          {Math.min(
-            (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
-            table.getRowCount()
-          )}{' '}
-          de {table.getRowCount()}
+          {end} de {totalItems}
         </span>
 
         <div className="flex items-center gap-2">
           <button
             onClick={() => table.firstPage()}
             disabled={!table.getCanPreviousPage()}
-            className="px-2 disabled:opacity-40"
+            className={`px-2 disabled:opacity-40 ${
+              table.getCanPreviousPage() ? 'cursor-pointer' : ''
+            }`}
           >
             «
           </button>
@@ -45,7 +49,9 @@ export const DashboardPagination = ({ table }: DashboardPaginationProps) => {
           <button
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
-            className="px-2 disabled:opacity-40"
+            className={`px-2 disabled:opacity-40 ${
+              table.getCanPreviousPage() ? 'cursor-pointer' : ''
+            }`}
           >
             ‹
           </button>
@@ -53,7 +59,7 @@ export const DashboardPagination = ({ table }: DashboardPaginationProps) => {
           <button
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
-            className="px-2 disabled:opacity-40"
+            className={`px-2 disabled:opacity-40 ${table.getCanNextPage() ? 'cursor-pointer' : ''}`}
           >
             ›
           </button>
@@ -61,7 +67,7 @@ export const DashboardPagination = ({ table }: DashboardPaginationProps) => {
           <button
             onClick={() => table.lastPage()}
             disabled={!table.getCanNextPage()}
-            className="px-2 disabled:opacity-40"
+            className={`px-2 disabled:opacity-40 ${table.getCanNextPage() ? 'cursor-pointer' : ''}`}
           >
             »
           </button>
