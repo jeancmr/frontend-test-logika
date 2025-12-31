@@ -1,4 +1,8 @@
-export const DashboardFilters = () => {
+interface Props {
+  handleModal: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const DashboardFilters = ({ handleModal }: Props) => {
   return (
     <div className="mb-8 mt-8 flex items-center justify-between">
       <div className="flex items-center gap-3">
@@ -11,7 +15,10 @@ export const DashboardFilters = () => {
         </button>
       </div>
 
-      <button className="bg-indigo-950 rounded-sm text-white px-4 py-2 cursor-pointer hover:bg-blue-900 font-medium ">
+      <button
+        onClick={() => handleModal((prev) => !prev)}
+        className="bg-indigo-950 rounded-sm text-white px-4 py-2 cursor-pointer hover:bg-blue-900 font-medium transition-colors"
+      >
         Crear tipo de categoría
       </button>
     </div>

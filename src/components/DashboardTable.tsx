@@ -4,11 +4,13 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { useState } from 'react';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Action } from '../types/types';
 import { DashboardPagination } from './DashboardPagination';
 import { DashboardFilters } from './DashboardFilters';
 import { useActions } from '../hooks/useActions';
+import { CreateActionModal } from './CreateActionModal';
 
 const columns: ColumnDef<Action>[] = [
   {
@@ -80,11 +82,12 @@ export const DashboardTable = () => {
   const {
     actions: data,
     error,
+    getActions,
     isLoading,
     pageCount,
-    totalItems,
     pagination,
     setPagination,
+    totalItems,
   } = useActions();
 
   const table = useReactTable({
@@ -98,9 +101,14 @@ export const DashboardTable = () => {
     getSortedRowModel: getSortedRowModel(),
   });
 
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <>
-      <DashboardFilters />
+      {isOpen && <CreateActionModal handleModal={setIsOpen} getActions={getActions} />}
+
+      <DashboardFilters handleModal={setIsOpen} />
+
       <div className="rounded-lg border border-gray-300 bg-white">
         <table className="w-full text-sm">
           <thead className="bg-gray-50">

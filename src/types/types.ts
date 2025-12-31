@@ -1,6 +1,6 @@
 export type LoginFormValues = {
-  username: string;
   password: string;
+  username: string;
 };
 
 export type Pagination = {
@@ -14,19 +14,27 @@ export interface GetActionsResponse {
 }
 
 export interface ActionsData {
-  pageSize: number;
+  data: Action[];
   pageNumber: number;
+  pageSize: number;
   totalElements: number;
   totalPages: number;
-  data: Action[];
 }
 
 export interface Action {
-  id: string;
-  name: string;
+  color: string;
+  createdAt: Date;
   description: string;
   icon: string;
-  color: string;
+  id: string;
+  name: string;
   status: number;
-  createdAt: Date;
+}
+
+export interface CreateActionForm {
+  color: string;
+  description: string;
+  icon: FileList;
+  name: string;
+  status: boolean;
 }
